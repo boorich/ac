@@ -2,7 +2,8 @@
 #![allow(dead_code)]
 
 use reqwest::{self};
-use serde::Deserialize;
+use serde::{Deserialize, Serializer, ser::SerializeStruct};
+use serde_json;
 
 #[tokio::main]
 async fn main() {
@@ -28,12 +29,12 @@ async fn main() {
         Mustache: Option<i32>,
     }
 
-    trait extract {
+    trait Extract {
         fn extract_to_vec(&self) -> Vec<i32>;
         fn extract_to_map(&self) -> Vec<(String, i32)>;
     }
 
-    impl extract for Language {
+    impl Extract for Language {
         fn extract_to_vec(&self) -> Vec<i32> {
             vec![
                 self.TypeScript.unwrap_or(0),
@@ -78,6 +79,7 @@ async fn main() {
                 ("Mustache".to_string(), self.Mustache.unwrap_or(0)),
             ]
         }
+
     }
 
     impl Default for Language {
@@ -90,7 +92,7 @@ async fn main() {
                 Go: None,
                 Java: None,
                 C: None,
-                Swift:  None,
+                Swift: None,
                 Kotlin: None,
                 Ruby: None,
                 Haskell: None,
@@ -104,27 +106,55 @@ async fn main() {
             }
         }
     }
-    
+
+    impl serde::Serialize for Language {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            let mut state = serializer.serialize_struct("Language", 18)?;
+            SerializeStruct::serialize_field(&mut state, "TypeScript", &self.TypeScript)?;
+            state.serialize_field("Python", &self.Python)?;
+            state.serialize_field("JavaScript", &self.JavaScript)?;
+            state.serialize_field("Rust", &self.Rust)?;
+            state.serialize_field("Go", &self.Go)?;
+            state.serialize_field("Java", &self.Java)?;
+            state.serialize_field("C", &self.C)?;
+            state.serialize_field("Swift", &self.Swift)?;
+            state.serialize_field("Kotlin", &self.Kotlin)?;
+            state.serialize_field("Ruby", &self.Ruby)?;
+            state.serialize_field("Haskell", &self.Haskell)?;
+            state.serialize_field("Lua", &self.Lua)?;
+            state.serialize_field("Lisp", &self.Lisp)?;
+            state.serialize_field("CSS", &self.CSS)?;
+            state.serialize_field("HTML", &self.HTML)?;
+            state.serialize_field("Shell", &self.Shell)?;
+            state.serialize_field("Dockerfile", &self.Dockerfile)?;
+            SerializeStruct::serialize_field(&mut state, "Mustache", &self.Mustache)?;
+            state.end()
+        }
+    }
+
     // naming the client after the app
     static APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
-    
+
     // some constants for debugging
     const URL1: &str = "https://api.github.com/repos/clearloop/allblue/languages";
     const URL2: &str = "https://api.github.com/repos/chainsafe/integrations/languages";
     const URL3: &str = "https://api.github.com/repos/empea-careercriminal/concierge/languages";
-    
+
     // build the client
     let client = reqwest::Client::builder()
-    .user_agent(APP_USER_AGENT)
-    .build();
-    
+        .user_agent(APP_USER_AGENT)
+        .build();
+
     // Create a Default Language struct
     let mut response: Language = Language::default();
 
     // type ascirption might be a bit overkill here
     response = client
         .expect("Didn´t work")
-        .get(URL3)
+        .get(URL2)
         .send()
         .await
         .unwrap()
@@ -133,6 +163,19 @@ async fn main() {
         .unwrap();
 
     // debug print
-    println!("Output: {:?}", response.extract_to_vec());
-    println!("Output: {:?}", response.extract_to_map());
+    println!("{:?}", response);
+    // println!("Output: {:?}", response.extract_to_vec());
+    // println!("Output: {:?}", response.extract_to_map());
+
+    // create folder structure
+    match std::fs::create_dir_all("json") {
+        Ok(it) => it,
+        Err(err) => panic!("Error creating directory: {}", err),
+    };
+    // Generate Json
+    let output_path = format!("json/output.json");
+    let output_file = std::fs::File::create(output_path).unwrap();
+    let mut output_writer = std::io::BufWriter::new(output_file);
+    serde_json::to_writer_pretty(&mut output_writer, &response).unwrap();
+
 }
