@@ -1,4 +1,3 @@
-#![feature(type_ascription)]
 #![allow(non_snake_case)]
 #![allow(dead_code)]
 
@@ -29,6 +28,58 @@ async fn main() {
         Mustache: Option<i32>,
     }
 
+    trait extract {
+        fn extract_to_vec(&self) -> Vec<i32>;
+        fn extract_to_map(&self) -> Vec<(String, i32)>;
+    }
+
+    impl extract for Language {
+        fn extract_to_vec(&self) -> Vec<i32> {
+            vec![
+                self.TypeScript.unwrap_or(0),
+                self.Python.unwrap_or(0),
+                self.JavaScript.unwrap_or(0),
+                self.Rust.unwrap_or(0),
+                self.Go.unwrap_or(0),
+                self.Java.unwrap_or(0),
+                self.C.unwrap_or(0),
+                self.Swift.unwrap_or(0),
+                self.Kotlin.unwrap_or(0),
+                self.Ruby.unwrap_or(0),
+                self.Haskell.unwrap_or(0),
+                self.Lua.unwrap_or(0),
+                self.Lisp.unwrap_or(0),
+                self.CSS.unwrap_or(0),
+                self.HTML.unwrap_or(0),
+                self.Shell.unwrap_or(0),
+                self.Dockerfile.unwrap_or(0),
+                self.Mustache.unwrap_or(0),
+            ]
+        }
+        fn extract_to_map(&self) -> Vec<(String, i32)> {
+            vec![
+                ("TypeScript".to_string(), self.TypeScript.unwrap_or(0)),
+                ("Python".to_string(), self.Python.unwrap_or(0)),
+                ("JavaScript".to_string(), self.JavaScript.unwrap_or(0)),
+                ("Rust".to_string(), self.Rust.unwrap_or(0)),
+                ("Go".to_string(), self.Go.unwrap_or(0)),
+                ("Java".to_string(), self.Java.unwrap_or(0)),
+                ("C".to_string(), self.C.unwrap_or(0)),
+                ("Swift".to_string(), self.Swift.unwrap_or(0)),
+                ("Kotlin".to_string(), self.Kotlin.unwrap_or(0)),
+                ("Ruby".to_string(), self.Ruby.unwrap_or(0)),
+                ("Haskell".to_string(), self.Haskell.unwrap_or(0)),
+                ("Lua".to_string(), self.Lua.unwrap_or(0)),
+                ("Lisp".to_string(), self.Lisp.unwrap_or(0)),
+                ("CSS".to_string(), self.CSS.unwrap_or(0)),
+                ("HTML".to_string(), self.HTML.unwrap_or(0)),
+                ("Shell".to_string(), self.Shell.unwrap_or(0)),
+                ("Dockerfile".to_string(), self.Dockerfile.unwrap_or(0)),
+                ("Mustache".to_string(), self.Mustache.unwrap_or(0)),
+            ]
+        }
+    }
+
     impl Default for Language {
         fn default() -> Self {
             Language {
@@ -53,7 +104,6 @@ async fn main() {
             }
         }
     }
-
     
     // naming the client after the app
     static APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
@@ -61,7 +111,7 @@ async fn main() {
     // some constants for debugging
     const URL1: &str = "https://api.github.com/repos/clearloop/allblue/languages";
     const URL2: &str = "https://api.github.com/repos/chainsafe/integrations/languages";
-    const URL3: &str = "https://api.github.com/repos/empea-careercriminal/languages";
+    const URL3: &str = "https://api.github.com/repos/empea-careercriminal/concierge/languages";
     
     // build the client
     let client = reqwest::Client::builder()
@@ -74,7 +124,7 @@ async fn main() {
     // type ascirption might be a bit overkill here
     response = client
         .expect("Didn´t work")
-        .get(URL2)
+        .get(URL3)
         .send()
         .await
         .unwrap()
@@ -82,6 +132,7 @@ async fn main() {
         .await
         .unwrap();
 
-    // print!("Response: {}", response.Python);
-    println!("Output: {:?}", response);
+    // debug print
+    println!("Output: {:?}", response.extract_to_vec());
+    println!("Output: {:?}", response.extract_to_map());
 }
