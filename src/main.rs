@@ -138,7 +138,7 @@ async fn main() {
     // naming the client after the app
     static APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
 
-    // some constants for debugging
+    // some constants for fetching different repo's data
     const URL1: &str = "https://api.github.com/repos/clearloop/allblue/languages";
     const URL2: &str = "https://api.github.com/repos/chainsafe/integrations/languages";
     const URL3: &str = "https://api.github.com/repos/empea-careercriminal/concierge/languages";
@@ -154,7 +154,7 @@ async fn main() {
     // type ascirption might be a bit overkill here
     response = client
         .expect("Didn´t work")
-        .get(URL2)
+        .get(URL3)
         .send()
         .await
         .unwrap()
