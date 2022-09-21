@@ -1,5 +1,7 @@
 # ac
 A tool to fetch programming languages from Github.
+By default, it fetches the most popular languages.
+Beware this is a work in progress.
 
 # Usage
 Add constants here:
