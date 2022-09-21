@@ -151,7 +151,7 @@ async fn main() {
     // Create a Default Language struct
     let mut response: Language = Language::default();
 
-    // type ascirption might be a bit overkill here
+    // fetch the data from the repo
     response = client
         .expect("Didn´t work")
         .get(URL3)

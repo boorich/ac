@@ -13,6 +13,6 @@ Add constants here:
 Call the function here:
 
     response = client
-        .expect("Didn´t work")
+        ...
         .get(URL3)
         ...
