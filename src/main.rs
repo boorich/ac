@@ -161,7 +161,7 @@ async fn main() {
     // fetch the data from the repo
     response = client
         .expect("Didn´t work")
-        .get(URL5)
+        .get(URL1)
         .send()
         .await
         .unwrap()

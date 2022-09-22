@@ -1,24 +1,21 @@
 {
-  "outpu1" :
-  {
-    "TypeScript": 13807,
-    "Python": null,
-    "Solidity": 5436,
-    "JavaScript": null,
-    "Rust": null,
-    "Go": null,
-    "Java": null,
-    "C": null,
-    "Swift": null,
-    "Kotlin": null,
-    "Ruby": null,
-    "Haskell": null,
-    "Lua": null,
-    "Lisp": null,
-    "CSS": null,
-    "HTML": null,
-    "Shell": null,
-    "Dockerfile": null,
-    "Mustache": null
-  }
+  "TypeScript": null,
+  "Python": 10541,
+  "Solidity": null,
+  "JavaScript": null,
+  "Rust": null,
+  "Go": 3234,
+  "Java": null,
+  "C": null,
+  "Swift": null,
+  "Kotlin": null,
+  "Ruby": null,
+  "Haskell": null,
+  "Lua": null,
+  "Lisp": null,
+  "CSS": null,
+  "HTML": null,
+  "Shell": null,
+  "Dockerfile": null,
+  "Mustache": null
 }
