@@ -10,6 +10,7 @@ async fn main() {
     #[derive(Deserialize, Debug)]
     struct Language {
         TypeScript: Option<i32>,
+        Solidity: Option<i32>,
         Python: Option<i32>,
         JavaScript: Option<i32>,
         Rust: Option<i32>,
@@ -38,6 +39,7 @@ async fn main() {
         fn extract_to_vec(&self) -> Vec<i32> {
             vec![
                 self.TypeScript.unwrap_or(0),
+                self.Solidity.unwrap_or(0),
                 self.Python.unwrap_or(0),
                 self.JavaScript.unwrap_or(0),
                 self.Rust.unwrap_or(0),
@@ -60,6 +62,7 @@ async fn main() {
         fn extract_to_map(&self) -> Vec<(String, i32)> {
             vec![
                 ("TypeScript".to_string(), self.TypeScript.unwrap_or(0)),
+                ("Solidity".to_string(), self.TypeScript.unwrap_or(0)),
                 ("Python".to_string(), self.Python.unwrap_or(0)),
                 ("JavaScript".to_string(), self.JavaScript.unwrap_or(0)),
                 ("Rust".to_string(), self.Rust.unwrap_or(0)),
@@ -86,6 +89,7 @@ async fn main() {
         fn default() -> Self {
             Language {
                 TypeScript: None,
+                Solidity: None,
                 Python: None,
                 JavaScript: None,
                 Rust: None,
@@ -115,6 +119,7 @@ async fn main() {
             let mut state = serializer.serialize_struct("Language", 18)?;
             SerializeStruct::serialize_field(&mut state, "TypeScript", &self.TypeScript)?;
             state.serialize_field("Python", &self.Python)?;
+            state.serialize_field("Solidity", &self.Solidity)?;
             state.serialize_field("JavaScript", &self.JavaScript)?;
             state.serialize_field("Rust", &self.Rust)?;
             state.serialize_field("Go", &self.Go)?;
@@ -142,6 +147,8 @@ async fn main() {
     const URL1: &str = "https://api.github.com/repos/clearloop/allblue/languages";
     const URL2: &str = "https://api.github.com/repos/chainsafe/integrations/languages";
     const URL3: &str = "https://api.github.com/repos/empea-careercriminal/concierge/languages";
+    const URL4: &str = "https://api.github.com/repos/paritytech/substrate/languages";
+    const URL5: &str = "https://api.github.com/repos/lastperson/vector-withdraw-helpers/languages";
 
     // build the client
     let client = reqwest::Client::builder()
@@ -154,7 +161,7 @@ async fn main() {
     // fetch the data from the repo
     response = client
         .expect("Didn´t work")
-        .get(URL3)
+        .get(URL5)
         .send()
         .await
         .unwrap()
